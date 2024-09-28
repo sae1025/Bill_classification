@@ -8,7 +8,7 @@ from tkinter import filedialog
 from openpyxl import load_workbook
 from spire.xls.common import *
 
-from 自动分类 import classification
+from 分类函数 import classification
 
 date_time1 = []  # 交易时间
 transaction_type1 = []  # 交易类型
