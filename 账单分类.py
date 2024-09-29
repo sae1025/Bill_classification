@@ -140,9 +140,13 @@ for y in range(0, len(date_time)):
     ym.cell(y + 2, 8).value = "{0}-{1}".format(commodity1[y], store1[y])
     ym.cell(y + 2, 7).value = Payment_method1[y]
 
-list1 =['日期', '收支类型', '金额', '类别', '子类', '所属账本', '收支账户', '备注']
-for i in (0, len(list1)):
+list1 = ['日期', '收支类型', '金额', '类别', '子类', '所属账本', '收支账户', '备注']
+# print(len(list1))
+
+for i in range(0, len(list1)):
     ym.cell(1, i+1).value = list1[i]
+
+
 try:
     os.remove(path1)
     os.makedirs(folder_path + "/完成")
