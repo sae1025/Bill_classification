@@ -5,7 +5,7 @@ import shutil
 import re
 from tkinter import filedialog
 
-from openpyxl import load_workbook
+from openpyxl import Workbook
 from spire.xls.common import *
 
 from 分类函数 import classification
@@ -22,7 +22,7 @@ subclass1 = []  # 二级分类
 
 # ali_or_wechat =[]
 
-yimu = load_workbook("一木模板.xlsx")
+yimu = Workbook()
 ym = yimu.active
 
 root = tk.Tk()
@@ -125,7 +125,6 @@ for i in range(0, len(csv1)):
 
 
 for y in range(0, len(date_time)):
-    cc = classification(in_or_out[y], store[y], transaction_type[y])  # 收支，商店名字，交易类型，
     for s in re.findall(r"-?\d+\.?\d*", money[y]):
         float_s = float(s)
         ym.cell(y + 2, 3).value = float_s  # 金额
@@ -140,6 +139,9 @@ for y in range(0, len(date_time)):
     ym.cell(y + 2, 8).value = "{0}-{1}".format(commodity1[y], store1[y])
     ym.cell(y + 2, 7).value = Payment_method1[y]
 
+list1 =['日期', '收支类型', '金额', '类别', '子类', '所属账本', '收支账户', '备注']
+for i in (0, len(list1)):
+    ym.cell(1, i+1).value = list1[i]
 try:
     os.remove(path1)
     os.makedirs(folder_path + "/完成")
