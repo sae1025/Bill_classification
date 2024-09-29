@@ -101,17 +101,18 @@ for i in range(0, len(csv1)):
                 cc = classification(in_or_out[y], commodity[y], store[y])  # 收支，商品，交易对方
                 if Payment_method[y] == "/":
                     Payment_method[y] = "支付宝"
+                    if cc is not None:
+                        str1, str2 = cc
+                        category.append(str1)
+                        subclass.append(str2)
             if "微信" in csv1[i]:
                 if Payment_method[y] == "零钱" or Payment_method[y] == "/":
                     Payment_method[y] = "微信钱包"
                 cc = classification(in_or_out[y], store[y], transaction_type[y])  # 收支，商店名字，交易类型，
-
-            if cc is not None:
-                str1, str2 = cc
-                category.append(str1)
-                subclass.append(str2)
-            else:
-                pass
+                if cc is not None:
+                    str1, str2 = cc
+                    category.append(str1)
+                    subclass.append(str2)
             y += 1
     date_time1 += date_time
     in_or_out1 += in_or_out
