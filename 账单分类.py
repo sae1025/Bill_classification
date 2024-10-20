@@ -1,7 +1,7 @@
 import csv
 import glob
 import tkinter as tk
-import shutil
+# import shutil
 import re
 from tkinter import filedialog
 
@@ -98,13 +98,13 @@ for i in range(0, len(csv1)):
             len_date_time = len(date_time)
         else:
             if "alipay" in csv1[i]:
-                cc = classification(in_or_out[y], commodity[y], store[y])  # 收支，商品，交易对方
                 if Payment_method[y] == "/":
                     Payment_method[y] = "支付宝"
-                    if cc is not None:
-                        str1, str2 = cc
-                        category.append(str1)
-                        subclass.append(str2)
+                cc = classification(in_or_out[y], commodity[y], store[y])  # 收支，商品，交易对方
+                if cc is not None:
+                    str1, str2 = cc
+                    category.append(str1)
+                    subclass.append(str2)
             if "微信" in csv1[i]:
                 if Payment_method[y] == "零钱" or Payment_method[y] == "/":
                     Payment_method[y] = "微信钱包"
@@ -119,18 +119,19 @@ for i in range(0, len(csv1)):
     store1 += store
     category1 += category
     subclass1 += subclass
+
     money1 += money
     Payment_method1 += Payment_method
     commodity1 += commodity
     transaction_type1 += transaction_type
 
 
-for y in range(0, len(date_time)):
-    for s in re.findall(r"-?\d+\.?\d*", money[y]):
+for y in range(0, len(date_time1)):  # 如果不需要分大餐，请将这部分代码注释
+    for s in re.findall(r"-?\d+\.?\d*", money1[y]):
         float_s = float(s)
         ym.cell(y + 2, 3).value = float_s  # 金额
-    if subclass[y] == "三餐" and float_s > 20:
-        ym.cell(y + 2, 5).value = "大餐"  # 二级分类
+    if subclass1[y] == "三餐" and float_s > 20:
+        subclass1[y] = "大餐"
 
     ym.cell(y + 2, 1).value = date_time1[y]  # 时间
     ym.cell(y + 2, 2).value = in_or_out1[y]  # 收支
@@ -141,11 +142,8 @@ for y in range(0, len(date_time)):
     ym.cell(y + 2, 7).value = Payment_method1[y]
 
 list1 = ['日期', '收支类型', '金额', '类别', '子类', '所属账本', '收支账户', '备注']
-# print(len(list1))
-
 for i in range(0, len(list1)):
     ym.cell(1, i+1).value = list1[i]
-
 
 try:
     os.remove(path1)
