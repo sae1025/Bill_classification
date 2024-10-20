@@ -3,6 +3,7 @@ import glob
 import tkinter as tk
 # import shutil
 import re
+import os
 from tkinter import filedialog
 
 from openpyxl import Workbook
@@ -152,5 +153,5 @@ except OSError:
     pass
 yimu_name = folder_path + "/完成/sc.xlsx"
 yimu.save(yimu_name)
-
+os.startfile(folder_path + "/完成")
 
