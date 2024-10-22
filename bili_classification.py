@@ -87,13 +87,11 @@ for i in range(0, len(csv1)):
             commodity.append(len2[3])
             money.append(len2[5])
             Payment_method.append(len2[6])
-    print(date_time)
+
     len_date_time = len(date_time)
-    print(len_date_time)
     y = 0
-    print(in_or_out)
     while y < len_date_time:
-        print(y)
+
         if in_or_out[y] == "不计收支":
             date_time.pop(y)
             in_or_out.pop(y)
