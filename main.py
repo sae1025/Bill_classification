@@ -7,7 +7,7 @@ import os
 from tkinter import filedialog
 
 from openpyxl import Workbook
-from spire.xls.common import *
+# from spire.xls.common import *
 
 from classification import classification
 
@@ -18,8 +18,8 @@ commodity1 = []  # 商品名称
 in_or_out1 = []  # 收支
 money1 = []  # 金额
 Payment_method1 = []  # 支付方式
-category1 = []  # 一级分类
-subclass1 = []  # 二级分类
+class1_1 = []  # 一级分类
+class2_1 = []  # 二级分类
 
 # ali_or_wechat =[]
 
@@ -43,8 +43,8 @@ for i in range(0, len(csv1)):
     date_time = []
     in_or_out = []
     store = []
-    category = []
-    subclass = []
+    class1 = []
+    class2 = []
     money = []
     Payment_method = []
     transaction_type = []
@@ -60,33 +60,35 @@ for i in range(0, len(csv1)):
             for row in reader:
                 len1.append(row)
     # file = os.path.splitext(os.path.basename(csv1[i]))[0]  # 拆出文件名
-
-    if "alipay" in csv1[i]:
-        del (len1[0:24])
-    elif "微信" in csv1[i]:
-        del (len1[0:16])
+    wechat = ['交易时间', '交易类型', '交易对方', '商品', '收/支', '金额(元)', '支付方式', '当前状态', '交易单号', '商户单号', '备注']
+    alipay = ['交易时间', '交易分类', '交易对方', '对方账号', '商品说明', '收/支', '金额', '收/付款方式', '交易状态', '交易订单号', '商家订单号', '备注']
+    if wechat in len1:
+        del (len1[0:len1.index(wechat)])
+        csv_name = 'wechat'
+    elif alipay in len1:
+        del (len1[0:len1.index(alipay)])
+        csv_name = 'alipay'
     len2 = []
-    # 支付宝['交易时间', '交易分类', '交易对方', '对方账号', '商品说明', '收/支', '金额', '收/付款方式', '交易状态', '交易订单号', '商家订单号', '备注']
-    # 微信['交易时间', '交易类型', '交易对方', '商品', '收/支', '金额(元)', '支付方式', '当前状态', '交易单号', '商户单号', '备注']
-    for b in range(1, len(len1)):
-
+    #       [   0           1          2          3           4          5          6            7                8          9            10            11
+    # 支付宝['交易时间', '交易分类', '交易对方', '对方账号', '商品说明', '收/支',    '金额',    '收/付款方式',   '交易状态', ' 交易订单号', ' 商家订单号', '备注']
+    # 微信  ['交易时间', '交易类型', '交易对方', '商品',     '收/支',    '金额(元)', '支付方式', '当前状态',     '交易单号',   '商户单号',     '备注']
+    for b in range(0, len(len1)):
         len2 = len1[b]
+        date_time.append(dateutil.parser.parse(len2[0]))  # 交易时间
+        transaction_type.append(len2[1])   # 交易分类
+        store.append(len2[2])  # 交易对方
 
-        date_time.append(dateutil.parser.parse(len2[0]))
-        transaction_type.append(len2[1])
-        store.append(len2[2])
+        if csv_name == "alipay":
+            in_or_out.append(len2[5])  # 收/支
+            commodity.append(len2[4])  # 商品说明
+            money.append(len2[6])  # '金额'
+            Payment_method.append(len2[7])  # 收/付款方式
 
-        if "alipay" in csv1[i]:
-            in_or_out.append(len2[5])
-            commodity.append(len2[4])
-            money.append(len2[6])
-            Payment_method.append(len2[7])
-
-        elif "微信" in csv1[i]:
-            in_or_out.append(len2[4])
-            commodity.append(len2[3])
-            money.append(len2[5])
-            Payment_method.append(len2[6])
+        elif csv_name == "wechat":
+            in_or_out.append(len2[4])  # 收/支
+            commodity.append(len2[3])  # 商品
+            money.append(len2[5])  # 金额(元)
+            Payment_method.append(len2[6])  # 支付方式
 
     len_date_time = len(date_time)
     y = 0
@@ -103,46 +105,45 @@ for i in range(0, len(csv1)):
             len_date_time = len(date_time)
 
         else:
-            if "alipay" in csv1[i]:
+            if csv_name == "alipay":
                 if Payment_method[y] == "/":
                     Payment_method[y] = "支付宝"
                 cc = classification(in_or_out[y], commodity[y], store[y])  # 收支，商品，交易对方
                 if cc is not None:
                     str1, str2 = cc
-                    category.append(str1)
-                    subclass.append(str2)
-            elif "微信" in csv1[i]:
+                    class1.append(str1)
+                    class2.append(str2)
+            elif csv_name == "wechat":
                 if Payment_method[y] == "零钱" or Payment_method[y] == "/":
                     Payment_method[y] = "微信钱包"
                 cc = classification(in_or_out[y], store[y], transaction_type[y])  # 收支，商店名字，交易类型，
                 if cc is not None:
                     str1, str2 = cc
-                    category.append(str1)
-                    subclass.append(str2)
+                    class1.append(str1)
+                    class2.append(str2)
             y += 1
-date_time1 += date_time
-in_or_out1 += in_or_out
-store1 += store
-category1 += category
-subclass1 += subclass
-
-money1 += money
-Payment_method1 += Payment_method
-commodity1 += commodity
-transaction_type1 += transaction_type
+    date_time1 += date_time
+    in_or_out1 += in_or_out
+    store1 += store
+    class1_1 += class1
+    class2_1 += class2
+    money1 += money
+    Payment_method1 += Payment_method
+    commodity1 += commodity
+    transaction_type1 += transaction_type
 
 
 for y in range(0, len(date_time1)):  # 如果不需要分大餐，请将这部分代码注释
     for s in re.findall(r"-?\d+\.?\d*", money1[y]):
         float_s = float(s)
         ym.cell(y + 2, 3).value = float_s  # 金额
-    if subclass1[y] == "三餐" and float_s > 20:
-        subclass1[y] = "大餐"
+    if class2_1[y] == "三餐" and float_s > 20:
+        class2_1[y] = "大餐"
 
     ym.cell(y + 2, 1).value = date_time1[y]  # 时间
     ym.cell(y + 2, 2).value = in_or_out1[y]  # 收支
-    ym.cell(y + 2, 4).value = category1[y]  # 一级分类
-    ym.cell(y + 2, 5).value = subclass1[y]  # 二级分类
+    ym.cell(y + 2, 4).value = class1_1[y]  # 一级分类
+    ym.cell(y + 2, 5).value = class2_1[y]  # 二级分类
     ym.cell(y + 2, 6).value = "日常账本"
     ym.cell(y + 2, 8).value = "{0}-{1}".format(commodity1[y], store1[y])
     ym.cell(y + 2, 7).value = Payment_method1[y]
