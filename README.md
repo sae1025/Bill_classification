@@ -1,7 +1,7 @@
 # 方便将支付宝和微信的账单进行分类后导入记账app
 ## 使用方法
 1.安装Python环境  
-2.下载bili_classification.py和classification.py两个文件  
+2.下载main.py和classification.py两个文件  
 3.运行**bili_classification.py**，选择存放从支付宝和微信导出的账单的文件夹  
 4.完成后会有一个完成的文件夹生成在账单的文件夹内，里面的sc.xlxs就是分类好的文件  
 
